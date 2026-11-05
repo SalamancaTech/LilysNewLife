@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lily's Life - Title Screen</title>
+    <!-- Importing multiple Google Fonts for settings -->
+    <link href="https://fonts.googleapis.com/css2?family=Hachi+Maru+Pop&family=Pacifico&family=Quicksand:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        /* Base resetting and full-screen centering */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Hachi Maru Pop', cursive;
+            background: linear-gradient(135deg, #fff0ce 0%, #ffc3a0 40%, #ffafbd 80%, #ffc3a0 100%);
+            color: #4a0040;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Subtle glittery background overlay using a repeating SVG pattern */
+        .glitter-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg width="150" height="150" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="30" r="1.5" fill="rgba(255,100,255,0.6)"/><circle cx="90" cy="80" r="1" fill="rgba(200,100,255,0.7)"/><circle cx="50" cy="120" r="2" fill="rgba(255,255,255,0.8)"/><circle cx="130" cy="20" r="1" fill="rgba(255,150,255,0.8)"/></svg>');
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Main Layout Split */
+        .layout-wrapper {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            width: 100%;
+            max-width: 1400px;
+            padding: 2rem;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        .image-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            filter: drop-shadow(0 0 20px rgba(255, 100, 150, 0.4));
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .menu-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* Main menu container */
+        .menu-container {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 2px solid rgba(255, 100, 255, 0.4);
+            box-shadow: 0 0 30px rgba(255, 100, 150, 0.2);
+            text-align: right;
+            max-width: 450px;
+            width: 100%;
+            backdrop-filter: blur(8px);
+        }
+
+        /* 90s Gel Pen Glowing Text Effect */
+        .title-text {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            color: #4a0040;
+            text-shadow: 
+                0 0 3px #fff,
+                0 0 8px #ff66ff,
+                0 0 15px #ff00ff;
+            letter-spacing: 2px;
+        }
+
+        .subtitle-text {
+            font-size: 1rem;
+            color: #6a0050;
+            margin-bottom: 2.5rem;
+            text-shadow: 0 0 4px #ff66ff, 0 0 8px #fff;
+            line-height: 1.4;
+        }
+
+        /* Menu Navigation */
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 15px;
+        }
+
+        /* Glowing Gel Pen Buttons */
+        .menu-btn {
+            font-family: 'Hachi Maru Pop', cursive;
+            font-size: 1.2rem;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.4);
+            color: #6a0060;
+            border: 2px solid #ff00ff;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 8px rgba(255, 0, 255, 0.4), inset 0 0 8px rgba(255, 0, 255, 0.2);
+            text-shadow: 0 0 3px #ff66ff;
+        }
+
+        /* Hover states for the buttons - vibrant fill */
+        .menu-btn:hover {
+            background: #ff66ff;
+            color: #fff;
+            box-shadow: 0 0 15px #ff00ff, inset 0 0 10px #ff00ff;
+            text-shadow: 0 0 5px #aa00ff;
+            transform: scale(1.05);
+        }
+
+        .menu-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Smaller utility buttons layout */
+        .utility-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .utility-row .menu-btn {
+            flex: 1;
+            font-size: 1rem;
+            padding: 10px;
+            border-color: #b366ff;
+            color: #4a0060;
+            box-shadow: 0 0 8px rgba(179, 102, 255, 0.4), inset 0 0 8px rgba(179, 102, 255, 0.2);
+            text-shadow: 0 0 3px #b366ff;
+        }
+
+        .utility-row .menu-btn:hover {
+            background: #b366ff;
+            color: #fff;
+            box-shadow: 0 0 15px #b366ff, inset 0 0 10px #b366ff;
+        }
+
+        /* --- Dark Mode (Sunset/Night & Icy Blue) --- */
+        body.dark-mode {
+            background: linear-gradient(135deg, #090a0f 0%, #151a2f 40%, #203a43 80%, #000000 100%);
+            color: #e0f7fa;
+        }
+        body.dark-mode .menu-container {
+            background: rgba(10, 15, 30, 0.4);
+            border-color: rgba(0, 229, 255, 0.4);
+            box-shadow: 0 0 30px rgba(0, 176, 255, 0.2);
+        }
+        body.dark-mode .title-text {
+            color: #e0f7fa;
+            text-shadow: 0 0 3px #fff, 0 0 8px #00e5ff, 0 0 15px #00b0ff;
+        }
+        body.dark-mode .subtitle-text {
+            color: #b2ebf2;
+            text-shadow: 0 0 4px #00e5ff, 0 0 8px #fff;
+        }
+        body.dark-mode .menu-btn {
+            background: rgba(0, 0, 0, 0.4);
+            color: #84ffff;
+            border-color: #00e5ff;
+            box-shadow: 0 0 8px rgba(0, 229, 255, 0.4), inset 0 0 8px rgba(0, 229, 255, 0.2);
+            text-shadow: 0 0 3px #00e5ff;
+        }
+        body.dark-mode .menu-btn:hover {
+            background: #00e5ff;
+            color: #000;
+            box-shadow: 0 0 15px #00e5ff, inset 0 0 10px #00e5ff;
+            text-shadow: none;
+        }
+        body.dark-mode .utility-row .menu-btn {
+            border-color: #80d8ff;
+            color: #80d8ff;
+            box-shadow: 0 0 8px rgba(128, 216, 255, 0.4), inset 0 0 8px rgba(128, 216, 255, 0.2);
+        }
+        body.dark-mode .utility-row .menu-btn:hover {
+            background: #80d8ff;
+            color: #000;
+            box-shadow: 0 0 15px #80d8ff, inset 0 0 10px #80d8ff;
+        }
+
+        /* --- Settings Menu Styles --- */
+        .setting-group {
+            margin-bottom: 1.2rem;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+        }
+        .setting-group label {
+            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+            color: #6a0050;
+            text-shadow: 0 0 3px #ff66ff;
+        }
+        body.dark-mode .setting-group label {
+            color: #b2ebf2;
+            text-shadow: 0 0 3px #00e5ff;
+        }
+        .setting-control {
+            font-family: inherit;
+            font-size: 1rem;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 2px solid #ff00ff;
+            color: #4a0040;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        body.dark-mode .setting-control {
+            background: rgba(0, 0, 0, 0.5);
+            border-color: #00e5ff;
+            color: #e0f7fa;
+        }
+        .setting-control:focus {
+            box-shadow: 0 0 10px #ff00ff;
+        }
+        body.dark-mode .setting-control:focus {
+            box-shadow: 0 0 10px #00e5ff;
+        }
+        
+        .checkbox-row {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .checkbox-row label {
+            margin-bottom: 0;
+        }
+        .checkbox-row input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        /* --- Game Screen Styles --- */
+        #game-screen {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            overflow: hidden;
+            background: inherit;
+        }
+
+        #game-container {
+            width: 1920px;
+            height: 1080px;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+            transform-origin: center center;
+            flex-shrink: 0;
+        }
+
+        #game-container h1 {
+            font-size: 4rem;
+            color: #4a0040;
+            text-shadow: 0 0 5px #fff, 0 0 15px #ff66ff, 0 0 25px #ff00ff;
+        }
+
+        body.dark-mode #game-container {
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        body.dark-mode #game-container h1 {
+            color: #e0f7fa;
+            text-shadow: 0 0 5px #fff, 0 0 15px #00e5ff, 0 0 25px #00b0ff;
+        }
+
+        /* --- 21-Cell UI Grid Styles --- */
+        .game-grid {
+            display: grid;
+            grid-template-columns: 25% 50% 25%;
+            width: 100%;
+            height: 100%;
+            font-size: 2.5rem;
+            color: #ff66ff;
+            text-shadow: 0 0 8px #ff00ff, 0 0 3px #fff;
+        }
+
+        body.dark-mode .game-grid {
+            color: #00e5ff;
+            text-shadow: 0 0 8px #00b0ff, 0 0 3px #fff;
+        }
+
+        .ui-cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(255, 0, 255, 0.5);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 0 10px rgba(255, 0, 255, 0.1);
+            position: relative;
+        }
+
+        body.dark-mode .ui-cell {
+            border-color: rgba(0, 229, 255, 0.5);
+            background: rgba(0, 0, 0, 0.2);
+            box-shadow: inset 0 0 10px rgba(0, 229, 255, 0.1);
+        }
+
+        /* Structural Flex & Grid Helpers */
+        .col-flex { display: flex; flex-direction: column; height: 100%; }
+        .row-flex { display: flex; flex-direction: row; }
+        
+        /* Left Column Specifics */
+        .left-top { 
+            height: 30%; 
+            display: grid; 
+            grid-template-columns: 10% 60% 30%;
+            grid-template-rows: repeat(7, 1fr);
+        }
+        .cell-1 { grid-column: 1; grid-row: 1 / span 7; }
+        .cell-2 { grid-column: 2; grid-row: 1; }
+        .cell-3 { grid-column: 2; grid-row: 2; }
+        .cell-4 { grid-column: 2; grid-row: 3; }
+        .cell-5 { grid-column: 2; grid-row: 4; }
+        .cell-6 { grid-column: 2; grid-row: 5; }
+        .cell-7 { grid-column: 2; grid-row: 6; }
+        .cell-8 { grid-column: 2; grid-row: 7; }
+        .cell-9 { grid-column: 3; grid-row: 1 / span 3; cursor: pointer; transition: all 0.3s ease; z-index: 5; width: 100%; height: 100%; }
+        .cell-10 { grid-column: 3; grid-row: 4 / span 2; cursor: pointer; transition: all 0.3s ease; z-index: 5; width: 100%; height: 100%; }
+        .cell-11 { grid-column: 3; grid-row: 6 / span 2; cursor: pointer; transition: all 0.3s ease; z-index: 5; width: 100%; height: 100%; }
+        
+        .left-bottom { height: 70%; }
+
+        /* Middle Column Specifics */
+        .mid-top { height: 45%; }
+        .mid-mid { height: 35%; }
+        .mid-bottom { height: 20%; display: grid; grid-template-columns: 25% 50% 25%; }
+
+        /* Right Column Specifics */
+        .right-top { height: 25%; display: flex; }
+        .right-top-left { width: 50%; position: relative; border: none; padding: 0; background: transparent; box-shadow: none; }
+        .right-top-right { width: 50%; }
+        .right-bottom { height: 75%; }
+
+        /* Diagonal Split Cells */
+        .cell-18 {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            clip-path: polygon(0 0, 100% 0, 0 100%);
+            align-items: flex-start;
+            justify-content: flex-start;
+            padding: 30px;
+        }
+
+        .cell-19 {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            clip-path: polygon(100% 0, 100% 100%, 0 100%);
+            align-items: flex-end;
+            justify-content: flex-end;
+            padding: 30px;
+        }
+
+        .cell-18, .cell-19 {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* --- In-Game Menu Modal & Gel Button Styles --- */
+        .hidden {
+            display: none !important;
+        }
+
+        #ingame-menu-modal, .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .gel-panel {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 3rem 4rem;
+            border-radius: 20px;
+            border: 2px solid rgba(255, 100, 255, 0.4);
+            box-shadow: 0 0 30px rgba(255, 100, 150, 0.4);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+            min-width: 400px;
+        }
+
+        body.dark-mode .gel-panel {
+            background: rgba(10, 15, 30, 0.6);
+            border-color: rgba(0, 229, 255, 0.4);
+            box-shadow: 0 0 30px rgba(0, 176, 255, 0.4);
+        }
+
+        .large-modal-panel {
+            width: 80%;
+            height: 80%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-content-area {
+            flex: 1;
+            border: 1px dashed rgba(255, 100, 255, 0.3);
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Interactive Cell Hover States */
+        .cell-9:hover, .cell-10:hover, .cell-11:hover, .cell-18:hover, .cell-19:hover {
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: inset 0 0 20px rgba(255, 0, 255, 0.5), 0 0 10px rgba(255, 0, 255, 0.3);
+            text-shadow: 0 0 15px #ff00ff, 0 0 5px #fff;
+        }
+
+        body.dark-mode .cell-9:hover, body.dark-mode .cell-10:hover, body.dark-mode .cell-11:hover, body.dark-mode .cell-18:hover, body.dark-mode .cell-19:hover {
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: inset 0 0 20px rgba(0, 229, 255, 0.5), 0 0 10px rgba(0, 229, 255, 0.3);
+            text-shadow: 0 0 15px #00e5ff, 0 0 5px #fff;
+        }
+
+        .placeholder-img {
+            background: linear-gradient(135deg, rgba(255, 100, 255, 0.2), rgba(0, 229, 255, 0.2));
+        }
+    </style>
+</head>
+<body>
+    <!-- Glitter background layer -->
+    <div class="glitter-bg"></div>
+
+    <div class="layout-wrapper" id="layout-wrapper">
+        <!-- Left Side: Image -->
+        <div class="image-container">
+            <img src="https://raw.githubusercontent.com/SalamancaTech/LilysNewLife/main/assets/images01/Lily-fullbody-pose-001.png" alt="Lily Character Portrait">
+        </div>
+
+        <!-- Right Side: Menu -->
+        <div class="menu-wrapper">
+            <div class="menu-container">
+                <!-- MAIN MENU SCREEN -->
+                <div id="main-menu">
+                    <!-- Titles -->
+                    <h1 class="title-text">Lily's Life</h1>
+                    <p class="subtitle-text">Body-swap themed,<br/>Clothing-based CYOA RPG</p>
+
+                    <!-- Navigation Buttons -->
+                    <nav class="nav-menu">
+                        <button class="menu-btn" id="btn-new-game">New Game</button>
+                        <button class="menu-btn" id="btn-load-game">Load Game</button>
+                        <button class="menu-btn" id="btn-open-settings">Game Settings</button>
+                        <button class="menu-btn" id="btn-ai-settings">AI Settings</button>
+                        
+                        <div class="utility-row">
+                            <button class="menu-btn">Support</button>
+                            <button class="menu-btn">About</button>
+                        </div>
+                    </nav>
+                </div>
+
+                <!-- SETTINGS MENU SCREEN -->
+                <div id="settings-menu" style="display: none;">
+                    <h2 class="title-text" style="font-size: 2.5rem;">Settings</h2>
+                    
+                    <div class="setting-group">
+                        <label for="font-select">Font Style</label>
+                        <select id="font-select" class="setting-control">
+                            <option value="'Hachi Maru Pop', cursive">Hachi Maru Pop (90s Cute)</option>
+                            <option value="'Quicksand', sans-serif">Quicksand (Clean Modern)</option>
+                            <option value="'VT323', monospace">VT323 (Retro Pixel)</option>
+                            <option value="'Pacifico', cursive">Pacifico (Smooth Cursive)</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label for="size-select">Font Size</label>
+                        <select id="size-select" class="setting-control">
+                            <option value="14px">Small</option>
+                            <option value="16px" selected>Normal</option>
+                            <option value="20px">Large</option>
+                            <option value="24px">Extra Large</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group checkbox-row">
+                        <label for="theme-toggle">Dark Mode</label>
+                        <input type="checkbox" id="theme-toggle" class="setting-control" style="width: auto;">
+                    </div>
+
+                    <div class="setting-group checkbox-row">
+                        <label for="nsfw-toggle">NSFW Content</label>
+                        <input type="checkbox" id="nsfw-toggle" class="setting-control" style="width: auto;">
+                    </div>
+
+                    <nav class="nav-menu" style="margin-top: 2rem;">
+                        <button class="menu-btn" id="btn-back-main">Back to Menu</button>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN GAME SCREEN -->
+    <div id="game-screen" style="display: none;">
+        <div id="game-container">
+            <div class="game-grid">
+                <!-- LEFT COLUMN (25%) -->
+                <div class="col-flex">
+                    <div class="left-top">
+                        <div class="ui-cell cell-1">1</div>
+                        <div class="ui-cell cell-2">2</div>
+                        <div class="ui-cell cell-3">3</div>
+                        <div class="ui-cell cell-4">4</div>
+                        <div class="ui-cell cell-5">5</div>
+                        <div class="ui-cell cell-6">6</div>
+                        <div class="ui-cell cell-7">7</div>
+                        <div class="ui-cell cell-8">8</div>
+                        <div class="ui-cell cell-9" id="cell-9-menu">9</div>
+                        <div class="ui-cell cell-10" id="cell-10-clothing">10</div>
+                        <div class="ui-cell cell-11" id="cell-11-characters">11</div>
+                    </div>
+                    <div class="ui-cell left-bottom">12</div>
+                </div>
+
+                <!-- MIDDLE COLUMN (50%) -->
+                <div class="col-flex">
+                    <div class="ui-cell mid-top">13</div>
+                    <div class="ui-cell mid-mid">14</div>
+                    <div class="mid-bottom">
+                        <div class="ui-cell">15</div>
+                        <div class="ui-cell">16</div>
+                        <div class="ui-cell">17</div>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN (25%) -->
+                <div class="col-flex">
+                    <div class="right-top">
+                        <div class="ui-cell right-top-left">
+                            <div class="ui-cell cell-18" id="cell-18-map">18</div>
+                            <div class="ui-cell cell-19" id="cell-19-sublocations">19</div>
+                        </div>
+                        <div class="ui-cell right-top-right">20</div>
+                    </div>
+                    <div class="ui-cell right-bottom">21</div>
+                </div>
+            </div>
+
+            <!-- In-Game Menu Modal (Appears above the grid but inside the 1920x1080 scaling container) -->
+            <div id="ingame-menu-modal" class="hidden modal-overlay">
+                <div class="gel-panel">
+                    <h2 class="title-text" style="font-size: 3rem; margin-bottom: 10px;">Menu</h2>
+                    <button class="gel-btn">Save Game</button>
+                    <button class="gel-btn">Load Game</button>
+                    <button class="gel-btn">Settings</button>
+                    <button id="return-main-btn" class="gel-btn">Main Menu</button>
+                    <button id="close-menu-btn" class="gel-btn" style="margin-top: 15px;">Close</button>
+                </div>
+            </div>
+
+            <!-- Clothing Modal -->
+            <div id="clothing-modal" class="hidden modal-overlay">
+                <div class="gel-panel large-modal-panel">
+                    <h2 class="title-text" style="font-size: 3rem; margin-bottom: 10px;">Clothing</h2>
+                    <div class="modal-content-area">
+                        <!-- Future clothing inventory goes here -->
+                    </div>
+                    <button id="close-clothing-btn" class="gel-btn" style="margin-top: auto;">Close</button>
+                </div>
+            </div>
+
+            <!-- Characters Modal -->
+            <div id="characters-modal" class="hidden modal-overlay">
+                <div class="gel-panel large-modal-panel">
+                    <h2 class="title-text" style="font-size: 3rem; margin-bottom: 10px;">Characters</h2>
+                    <div class="modal-content-area">
+                        <!-- Future character relationships go here -->
+                    </div>
+                    <button id="close-characters-btn" class="gel-btn" style="margin-top: auto;">Close</button>
+                </div>
+            </div>
+
+            <!-- Map Modal -->
+            <div id="map-modal" class="hidden modal-overlay">
+                <div class="gel-panel large-modal-panel">
+                    <h2 class="title-text" style="font-size: 3rem; margin-bottom: 10px;">Map</h2>
+                    <div class="modal-content-area">
+                        <!-- Future map goes here -->
+                    </div>
+                    <button id="close-map-btn" class="gel-btn" style="margin-top: auto;">Close</button>
+                </div>
+            </div>
+
+            <!-- Sub-Locations Modal -->
+            <div id="sub-locations-modal" class="hidden modal-overlay">
+                <div class="gel-panel large-modal-panel">
+                    <h2 class="title-text" style="font-size: 3rem; margin-bottom: 10px;">Sub-Locations</h2>
+                    <div class="modal-content-area">
+                        <!-- Future sub-locations go here -->
+                    </div>
+                    <button id="close-sub-locations-btn" class="gel-btn" style="margin-top: auto;">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("Lily's Life - DOM initialized.");
+            
+            // --- DOM Elements ---
+            const layoutWrapper = document.getElementById('layout-wrapper');
+            const mainMenu = document.getElementById('main-menu');
+            const settingsMenu = document.getElementById('settings-menu');
+            const gameScreen = document.getElementById('game-screen');
+            const gameContainer = document.getElementById('game-container');
+            
+            const btnNewGame = document.getElementById('btn-new-game');
+            const btnOpenSettings = document.getElementById('btn-open-settings');
+            const btnBackMain = document.getElementById('btn-back-main');
+            
+            const fontSelect = document.getElementById('font-select');
+            const sizeSelect = document.getElementById('size-select');
+            const themeToggle = document.getElementById('theme-toggle');
+            const nsfwToggle = document.getElementById('nsfw-toggle');
+
+            // --- In-Game Modal Elements ---
+            const inGameMenuCell = document.getElementById('cell-9-menu');
+            const inGameMenuModal = document.getElementById('ingame-menu-modal');
+            const closeMenuBtn = document.getElementById('close-menu-btn');
+            const returnMainBtn = document.getElementById('return-main-btn');
+
+            const clothingCell = document.getElementById('cell-10-clothing');
+            const clothingModal = document.getElementById('clothing-modal');
+            const closeClothingBtn = document.getElementById('close-clothing-btn');
+
+            const charactersCell = document.getElementById('cell-11-characters');
+            const charactersModal = document.getElementById('characters-modal');
+            const closeCharactersBtn = document.getElementById('close-characters-btn');
+
+            const mapCell = document.getElementById('cell-18-map');
+            const mapModal = document.getElementById('map-modal');
+            const closeMapBtn = document.getElementById('close-map-btn');
+
+            const subLocationsCell = document.getElementById('cell-19-sublocations');
+            const subLocationsModal = document.getElementById('sub-locations-modal');
+            const closeSubLocationsBtn = document.getElementById('close-sub-locations-btn');
+
+            // --- Game Screen Scaling Logic ---
+            function resizeGame() {
+                if (gameScreen.style.display !== 'none') {
+                    // Calculate the scale factor to fit exactly within the window while maintaining 16:9
+                    const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+                    gameContainer.style.transform = `scale(${scale})`;
+                    console.log(`[Resize] Game container scaled to: ${scale.toFixed(2)}`);
+                }
+            }
+
+            // Listen for window resizes
+            window.addEventListener('resize', resizeGame);
+
+            // --- Navigation Logic ---
+            btnNewGame.addEventListener('click', () => {
+                console.log("[Navigation] Starting New Game... Switching to Game Screen");
+                console.log("[Layout] Main UI 21-cell grid initialized.");
+                layoutWrapper.style.display = 'none';
+                gameScreen.style.display = 'flex';
+                // Trigger an initial resize computation
+                resizeGame();
+            });
+
+            btnOpenSettings.addEventListener('click', () => {
+                console.log("[Navigation] Switching to Settings Menu");
+                mainMenu.style.display = 'none';
+                settingsMenu.style.display = 'block';
+            });
+
+            btnBackMain.addEventListener('click', () => {
+                console.log("[Navigation] Switching to Main Menu");
+                settingsMenu.style.display = 'none';
+                mainMenu.style.display = 'block';
+            });
+
+            // --- In-Game Menu Logic ---
+            inGameMenuCell.addEventListener('click', () => {
+                console.log("[In-Game Menu] Opening modal from Cell 9 click");
+                inGameMenuModal.classList.remove('hidden');
+            });
+
+            closeMenuBtn.addEventListener('click', () => {
+                console.log("[In-Game Menu] Closing modal");
+                inGameMenuModal.classList.add('hidden');
+            });
+
+            returnMainBtn.addEventListener('click', () => {
+                console.log("[In-Game Menu] Returning to Main Menu Title Screen");
+                inGameMenuModal.classList.add('hidden');
+                gameScreen.style.display = 'none';
+                layoutWrapper.style.display = 'flex';
+            });
+
+            // --- Clothing Modal Logic ---
+            clothingCell.addEventListener('click', () => {
+                console.log("[Clothing Modal] Opening modal from Cell 10 click");
+                clothingModal.classList.remove('hidden');
+            });
+
+            closeClothingBtn.addEventListener('click', () => {
+                console.log("[Clothing Modal] Closing modal");
+                clothingModal.classList.add('hidden');
+            });
+
+            // --- Characters Modal Logic ---
+            charactersCell.addEventListener('click', () => {
+                console.log("[Characters Modal] Opening modal from Cell 11 click");
+                charactersModal.classList.remove('hidden');
+            });
+
+            closeCharactersBtn.addEventListener('click', () => {
+                console.log("[Characters Modal] Closing modal");
+                charactersModal.classList.add('hidden');
+            });
+
+            // --- Map Modal Logic ---
+            mapCell.addEventListener('click', () => {
+                console.log("[Map Modal] Opening modal from Cell 18 click");
+                mapModal.classList.remove('hidden');
+            });
+
+            closeMapBtn.addEventListener('click', () => {
+                console.log("[Map Modal] Closing modal");
+                mapModal.classList.add('hidden');
+            });
+
+            // --- Sub-Locations Modal Logic ---
+            subLocationsCell.addEventListener('click', () => {
+                console.log("[Sub-Locations Modal] Opening modal from Cell 19 click");
+                subLocationsModal.classList.remove('hidden');
+            });
+
+            closeSubLocationsBtn.addEventListener('click', () => {
+                console.log("[Sub-Locations Modal] Closing modal");
+                subLocationsModal.classList.add('hidden');
+            });
+
+            // --- Settings Logic ---
+            fontSelect.addEventListener('change', (e) => {
+                const newFont = e.target.value;
+                document.body.style.fontFamily = newFont;
+                console.log(`[Settings] Font changed to: ${newFont}`);
+            });
+
+            sizeSelect.addEventListener('change', (e) => {
+                const newSize = e.target.value;
+                // Applying to html element to scale rem units properly
+                document.documentElement.style.fontSize = newSize;
+                console.log(`[Settings] Base font size changed to: ${newSize}`);
+            });
+
+            themeToggle.addEventListener('change', (e) => {
+                const isDark = e.target.checked;
+                if (isDark) {
+                    document.body.classList.add('dark-mode');
+                    console.log("[Settings] Theme: Dark Mode activated");
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    console.log("[Settings] Theme: Light Mode activated");
+                }
+            });
+
+            nsfwToggle.addEventListener('change', (e) => {
+                const isNsfw = e.target.checked;
+                console.log(`[Settings] NSFW Content toggled: ${isNsfw ? 'ON' : 'OFF'}`);
+                // Future integration will tie this to the game's state manager
+            });
+        });
+    </script>
+</body>
+</html>
