@@ -455,16 +455,46 @@
         }
 
         /* Interactive Cell Hover States */
-        .cell-9:hover, .cell-10:hover, .cell-11:hover, .cell-18:hover, .cell-19:hover {
+        .cell-9:hover, .cell-10:hover, .cell-11:hover, .cell-18:hover, .cell-19:hover, #cell-20-clock:hover {
             background: rgba(255, 255, 255, 0.4);
             box-shadow: inset 0 0 20px rgba(255, 0, 255, 0.5), 0 0 10px rgba(255, 0, 255, 0.3);
             text-shadow: 0 0 15px #ff00ff, 0 0 5px #fff;
         }
 
-        body.dark-mode .cell-9:hover, body.dark-mode .cell-10:hover, body.dark-mode .cell-11:hover, body.dark-mode .cell-18:hover, body.dark-mode .cell-19:hover {
+        body.dark-mode .cell-9:hover, body.dark-mode .cell-10:hover, body.dark-mode .cell-11:hover, body.dark-mode .cell-18:hover, body.dark-mode .cell-19:hover, body.dark-mode #cell-20-clock:hover {
             background: rgba(0, 0, 0, 0.6);
             box-shadow: inset 0 0 20px rgba(0, 229, 255, 0.5), 0 0 10px rgba(0, 229, 255, 0.3);
             text-shadow: 0 0 15px #00e5ff, 0 0 5px #fff;
+        }
+
+        #cell-20-clock {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .time-tracker {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.4rem;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.75);
+            padding: 8px 16px;
+            border-radius: 15px;
+            border: 2px solid #ff00ff;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.8);
+            pointer-events: none;
+            z-index: 10;
+            white-space: nowrap;
+        }
+
+        body.dark-mode .time-tracker {
+            background: rgba(0, 0, 0, 0.75);
+            border-color: #00e5ff;
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+            color: #e0f7fa;
+            text-shadow: 0 0 5px #00e5ff;
         }
 
         .placeholder-img {
@@ -587,7 +617,10 @@
                             <div class="ui-cell cell-18" id="cell-18-map">18</div>
                             <div class="ui-cell cell-19" id="cell-19-sublocations">19</div>
                         </div>
-                        <div class="ui-cell right-top-right">20</div>
+                        <div class="ui-cell right-top-right" id="cell-20-clock" style="padding: 10px;">
+                            <img id="game-clock-img" src="https://raw.githubusercontent.com/SalamancaTech/LilysNewLife/main/assets/clock/clock-1.1-01.png" alt="Game Clock" style="max-width: 100%; max-height: 100%; object-fit: contain; filter: drop-shadow(0 0 10px rgba(255, 100, 255, 0.3));">
+                            <div id="time-display" class="time-tracker">D 1</div>
+                        </div>
                     </div>
                     <div class="ui-cell right-bottom">21</div>
                 </div>
@@ -693,6 +726,43 @@
             const subLocationsModal = document.getElementById('sub-locations-modal');
             const closeSubLocationsBtn = document.getElementById('close-sub-locations-btn');
 
+            // --- Clock Logic Elements ---
+            const clockCell = document.getElementById('cell-20-clock');
+            const clockImg = document.getElementById('game-clock-img');
+            const timeDisplay = document.getElementById('time-display');
+            
+            // Map stages exactly as defined
+            const timeStages = [
+                { name: "End of day", file: "Clock-end-of-day-01.png" },
+                { name: "Dawn-1", file: "clock-1.1-01.png" },
+                { name: "Dawn-2", file: "clock-1.2-01.png" },
+                { name: "Dawn-3", file: "clock-1.3-01.png" },
+                { name: "Morn-1", file: "clock-2.1-01.png" },
+                { name: "Morn-2", file: "clock-2.2-01.png" },
+                { name: "Morn-3", file: "clock-2.3-01.png" },
+                { name: "Noon-1", file: "clock-3.1-01.png" },
+                { name: "Noon-2", file: "clock-3.2-01.png" },
+                { name: "Noon-3", file: "clock-3.3-01.png" },
+                { name: "Eve-1", file: "clock-4.1-01.png" },
+                { name: "Eve-2", file: "clock-4.2-01.png" },
+                { name: "Eve-3", file: "clock-4.3-01.png" },
+                { name: "Night-1", file: "clock-5.1-01.png" },
+                { name: "Night-2", file: "clock-5.2-01.png" },
+                { name: "Night-3", file: "clock-5.3-01.png" }
+            ];
+            
+            let currentDay = 1;
+            let currentClockIndex = 1; // Start game precisely at Dawn-1 (index 1)
+            const clockBaseUrl = "https://raw.githubusercontent.com/SalamancaTech/LilysNewLife/main/assets/clock/";
+
+            function updateTimeDisplay() {
+                const stage = timeStages[currentClockIndex];
+                clockImg.src = clockBaseUrl + stage.file;
+                
+                timeDisplay.innerText = `D ${currentDay}`;
+                console.log(`[Clock] Advanced to Day ${currentDay}, Stage: ${stage.name} (${stage.file})`);
+            }
+
             // --- Game Screen Scaling Logic ---
             function resizeGame() {
                 if (gameScreen.style.display !== 'none') {
@@ -788,6 +858,23 @@
             closeSubLocationsBtn.addEventListener('click', () => {
                 console.log("[Sub-Locations Modal] Closing modal");
                 subLocationsModal.classList.add('hidden');
+            });
+
+            // --- Clock Cycle Logic ---
+            clockCell.addEventListener('click', () => {
+                currentClockIndex++;
+                
+                // Wrap around back to 0 (End of day) if we exceed the array
+                if (currentClockIndex >= timeStages.length) {
+                    currentClockIndex = 0;
+                }
+                
+                // If we transition from "End of day" (0) to "Dawn-1" (1), increment the Day Counter
+                if (currentClockIndex === 1) {
+                    currentDay++;
+                }
+
+                updateTimeDisplay();
             });
 
             // --- Settings Logic ---
