@@ -523,6 +523,7 @@
 
                     <!-- Navigation Buttons -->
                     <nav class="nav-menu">
+                        <button class="menu-btn hidden" id="btn-continue-game">Continue Game</button>
                         <button class="menu-btn" id="btn-new-game">New Game</button>
                         <button class="menu-btn" id="btn-load-game">Load Game</button>
                         <button class="menu-btn" id="btn-open-settings">Game Settings</button>
@@ -567,6 +568,11 @@
                     <div class="setting-group checkbox-row">
                         <label for="nsfw-toggle">NSFW Content</label>
                         <input type="checkbox" id="nsfw-toggle" class="setting-control" style="width: auto;">
+                    </div>
+
+                    <div class="setting-group checkbox-row">
+                        <label for="dev-mode-toggle">Developer Mode</label>
+                        <input type="checkbox" id="dev-mode-toggle" class="setting-control" style="width: auto;">
                     </div>
 
                     <nav class="nav-menu" style="margin-top: 2rem;">
@@ -629,12 +635,57 @@
             <!-- In-Game Menu Modal (Appears above the grid but inside the 1920x1080 scaling container) -->
             <div id="ingame-menu-modal" class="hidden modal-overlay">
                 <div class="gel-panel">
-                    <h2 class="title-text" style="font-size: 3rem; margin-bottom: 10px;">Menu</h2>
-                    <button class="gel-btn">Save Game</button>
-                    <button class="gel-btn">Load Game</button>
-                    <button class="gel-btn">Settings</button>
-                    <button id="return-main-btn" class="gel-btn">Main Menu</button>
-                    <button id="close-menu-btn" class="gel-btn" style="margin-top: 15px;">Close</button>
+                    <!-- Default Menu View -->
+                    <div id="pause-default-view" style="display: flex; flex-direction: column; gap: 20px;">
+                        <h2 class="title-text" style="font-size: 3rem; margin-bottom: 10px;">Menu</h2>
+                        <button class="menu-btn">Save Game</button>
+                        <button class="menu-btn">Load Game</button>
+                        <button id="ingame-settings-btn" class="menu-btn">Settings</button>
+                        <button id="return-main-btn" class="menu-btn">Main Menu</button>
+                        <button id="close-menu-btn" class="menu-btn" style="margin-top: 15px;">Close</button>
+                    </div>
+
+                    <!-- In-Game Settings View -->
+                    <div id="pause-settings-view" class="hidden" style="display: flex; flex-direction: column; gap: 15px; text-align: left;">
+                        <h2 class="title-text" style="font-size: 2.5rem; text-align: center; margin-bottom: 10px;">Settings</h2>
+                        
+                        <div class="setting-group">
+                            <label for="in-font-select">Font Style</label>
+                            <select id="in-font-select" class="setting-control">
+                                <option value="'Hachi Maru Pop', cursive">Hachi Maru Pop (90s Cute)</option>
+                                <option value="'Quicksand', sans-serif">Quicksand (Clean Modern)</option>
+                                <option value="'VT323', monospace">VT323 (Retro Pixel)</option>
+                                <option value="'Pacifico', cursive">Pacifico (Smooth Cursive)</option>
+                            </select>
+                        </div>
+
+                        <div class="setting-group">
+                            <label for="in-size-select">Font Size</label>
+                            <select id="in-size-select" class="setting-control">
+                                <option value="14px">Small</option>
+                                <option value="16px" selected>Normal</option>
+                                <option value="20px">Large</option>
+                                <option value="24px">Extra Large</option>
+                            </select>
+                        </div>
+
+                        <div class="setting-group checkbox-row">
+                            <label for="in-theme-toggle">Dark Mode</label>
+                            <input type="checkbox" id="in-theme-toggle" class="setting-control" style="width: auto;">
+                        </div>
+
+                        <div class="setting-group checkbox-row">
+                            <label for="in-nsfw-toggle">NSFW Content</label>
+                            <input type="checkbox" id="in-nsfw-toggle" class="setting-control" style="width: auto;">
+                        </div>
+
+                        <div class="setting-group checkbox-row">
+                            <label for="in-dev-mode-toggle">Developer Mode</label>
+                            <input type="checkbox" id="in-dev-mode-toggle" class="setting-control" style="width: auto;">
+                        </div>
+                        
+                        <button id="in-settings-back-btn" class="menu-btn" style="margin-top: 15px;">Back</button>
+                    </div>
                 </div>
             </div>
 
@@ -645,7 +696,7 @@
                     <div class="modal-content-area">
                         <!-- Future clothing inventory goes here -->
                     </div>
-                    <button id="close-clothing-btn" class="gel-btn" style="margin-top: auto;">Close</button>
+                    <button id="close-clothing-btn" class="menu-btn" style="margin-top: auto;">Close</button>
                 </div>
             </div>
 
@@ -656,7 +707,7 @@
                     <div class="modal-content-area">
                         <!-- Future character relationships go here -->
                     </div>
-                    <button id="close-characters-btn" class="gel-btn" style="margin-top: auto;">Close</button>
+                    <button id="close-characters-btn" class="menu-btn" style="margin-top: auto;">Close</button>
                 </div>
             </div>
 
@@ -667,7 +718,7 @@
                     <div class="modal-content-area">
                         <!-- Future map goes here -->
                     </div>
-                    <button id="close-map-btn" class="gel-btn" style="margin-top: auto;">Close</button>
+                    <button id="close-map-btn" class="menu-btn" style="margin-top: auto;">Close</button>
                 </div>
             </div>
 
@@ -678,7 +729,7 @@
                     <div class="modal-content-area">
                         <!-- Future sub-locations go here -->
                     </div>
-                    <button id="close-sub-locations-btn" class="gel-btn" style="margin-top: auto;">Close</button>
+                    <button id="close-sub-locations-btn" class="menu-btn" style="margin-top: auto;">Close</button>
                 </div>
             </div>
         </div>
@@ -696,6 +747,7 @@
             const gameContainer = document.getElementById('game-container');
             
             const btnNewGame = document.getElementById('btn-new-game');
+            const btnContinueGame = document.getElementById('btn-continue-game');
             const btnOpenSettings = document.getElementById('btn-open-settings');
             const btnBackMain = document.getElementById('btn-back-main');
             
@@ -703,12 +755,24 @@
             const sizeSelect = document.getElementById('size-select');
             const themeToggle = document.getElementById('theme-toggle');
             const nsfwToggle = document.getElementById('nsfw-toggle');
+            const devModeToggle = document.getElementById('dev-mode-toggle');
 
             // --- In-Game Modal Elements ---
             const inGameMenuCell = document.getElementById('cell-9-menu');
             const inGameMenuModal = document.getElementById('ingame-menu-modal');
+            const inGameSettingsBtn = document.getElementById('ingame-settings-btn');
             const closeMenuBtn = document.getElementById('close-menu-btn');
             const returnMainBtn = document.getElementById('return-main-btn');
+
+            const pauseDefaultView = document.getElementById('pause-default-view');
+            const pauseSettingsView = document.getElementById('pause-settings-view');
+            const inSettingsBackBtn = document.getElementById('in-settings-back-btn');
+
+            const inFontSelect = document.getElementById('in-font-select');
+            const inSizeSelect = document.getElementById('in-size-select');
+            const inThemeToggle = document.getElementById('in-theme-toggle');
+            const inNsfwToggle = document.getElementById('in-nsfw-toggle');
+            const inDevModeToggle = document.getElementById('in-dev-mode-toggle');
 
             const clothingCell = document.getElementById('cell-10-clothing');
             const clothingModal = document.getElementById('clothing-modal');
@@ -776,24 +840,36 @@
             // Listen for window resizes
             window.addEventListener('resize', resizeGame);
 
+            // State flags for smooth navigation
+            let isGameStarted = false;
+
             // --- Navigation Logic ---
             btnNewGame.addEventListener('click', () => {
                 console.log("[Navigation] Starting New Game... Switching to Game Screen");
                 console.log("[Layout] Main UI 21-cell grid initialized.");
+                isGameStarted = true;
+                btnContinueGame.classList.remove('hidden');
                 layoutWrapper.style.display = 'none';
                 gameScreen.style.display = 'flex';
                 // Trigger an initial resize computation
                 resizeGame();
             });
 
+            btnContinueGame.addEventListener('click', () => {
+                console.log("[Navigation] Continuing Game...");
+                layoutWrapper.style.display = 'none';
+                gameScreen.style.display = 'flex';
+                resizeGame();
+            });
+
             btnOpenSettings.addEventListener('click', () => {
-                console.log("[Navigation] Switching to Settings Menu");
+                console.log("[Navigation] Switching to Settings Menu from Main Menu");
                 mainMenu.style.display = 'none';
                 settingsMenu.style.display = 'block';
             });
 
             btnBackMain.addEventListener('click', () => {
-                console.log("[Navigation] Switching to Main Menu");
+                console.log("[Navigation] Returning to Main Menu");
                 settingsMenu.style.display = 'none';
                 mainMenu.style.display = 'block';
             });
@@ -801,7 +877,28 @@
             // --- In-Game Menu Logic ---
             inGameMenuCell.addEventListener('click', () => {
                 console.log("[In-Game Menu] Opening modal from Cell 9 click");
+                pauseSettingsView.classList.add('hidden');
+                pauseDefaultView.classList.remove('hidden');
                 inGameMenuModal.classList.remove('hidden');
+            });
+
+            inGameSettingsBtn.addEventListener('click', () => {
+                console.log("[In-Game Menu] Opening Settings within Pause Menu");
+                pauseDefaultView.classList.add('hidden');
+                pauseSettingsView.classList.remove('hidden');
+                
+                // Sync settings state from variables to ensure UI matches
+                inFontSelect.value = fontSelect.value;
+                inSizeSelect.value = sizeSelect.value;
+                inThemeToggle.checked = themeToggle.checked;
+                inNsfwToggle.checked = nsfwToggle.checked;
+                inDevModeToggle.checked = devModeToggle.checked;
+            });
+
+            inSettingsBackBtn.addEventListener('click', () => {
+                console.log("[In-Game Menu] Returning to Pause Menu Default View");
+                pauseSettingsView.classList.add('hidden');
+                pauseDefaultView.classList.remove('hidden');
             });
 
             closeMenuBtn.addEventListener('click', () => {
@@ -878,21 +975,21 @@
             });
 
             // --- Settings Logic ---
-            fontSelect.addEventListener('change', (e) => {
-                const newFont = e.target.value;
+            function applyFont(newFont) {
                 document.body.style.fontFamily = newFont;
+                fontSelect.value = newFont;
+                inFontSelect.value = newFont;
                 console.log(`[Settings] Font changed to: ${newFont}`);
-            });
+            }
 
-            sizeSelect.addEventListener('change', (e) => {
-                const newSize = e.target.value;
-                // Applying to html element to scale rem units properly
+            function applySize(newSize) {
                 document.documentElement.style.fontSize = newSize;
+                sizeSelect.value = newSize;
+                inSizeSelect.value = newSize;
                 console.log(`[Settings] Base font size changed to: ${newSize}`);
-            });
+            }
 
-            themeToggle.addEventListener('change', (e) => {
-                const isDark = e.target.checked;
+            function applyTheme(isDark) {
                 if (isDark) {
                     document.body.classList.add('dark-mode');
                     console.log("[Settings] Theme: Dark Mode activated");
@@ -900,13 +997,37 @@
                     document.body.classList.remove('dark-mode');
                     console.log("[Settings] Theme: Light Mode activated");
                 }
-            });
+                themeToggle.checked = isDark;
+                inThemeToggle.checked = isDark;
+            }
 
-            nsfwToggle.addEventListener('change', (e) => {
-                const isNsfw = e.target.checked;
+            function applyNSFW(isNsfw) {
                 console.log(`[Settings] NSFW Content toggled: ${isNsfw ? 'ON' : 'OFF'}`);
-                // Future integration will tie this to the game's state manager
-            });
+                nsfwToggle.checked = isNsfw;
+                inNsfwToggle.checked = isNsfw;
+            }
+
+            function applyDevMode(isDevMode) {
+                console.log(`[Settings] Developer Mode toggled: ${isDevMode ? 'ON' : 'OFF'}`);
+                devModeToggle.checked = isDevMode;
+                inDevModeToggle.checked = isDevMode;
+                // Hook in future developer testing panels/logs here
+            }
+
+            fontSelect.addEventListener('change', (e) => applyFont(e.target.value));
+            inFontSelect.addEventListener('change', (e) => applyFont(e.target.value));
+
+            sizeSelect.addEventListener('change', (e) => applySize(e.target.value));
+            inSizeSelect.addEventListener('change', (e) => applySize(e.target.value));
+
+            themeToggle.addEventListener('change', (e) => applyTheme(e.target.checked));
+            inThemeToggle.addEventListener('change', (e) => applyTheme(e.target.checked));
+
+            nsfwToggle.addEventListener('change', (e) => applyNSFW(e.target.checked));
+            inNsfwToggle.addEventListener('change', (e) => applyNSFW(e.target.checked));
+
+            devModeToggle.addEventListener('change', (e) => applyDevMode(e.target.checked));
+            inDevModeToggle.addEventListener('change', (e) => applyDevMode(e.target.checked));
         });
     </script>
 </body>
